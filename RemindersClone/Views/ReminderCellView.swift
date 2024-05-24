@@ -21,6 +21,16 @@ struct ReminderCellView: View {
     let isSelected: Bool
     let onEvent: (ReminderCellEvents) -> Void
    
+    private func formatReminderDate(_ date: Date) -> String {
+        if date.isToday {
+            return "Today"
+        } else if date.isTomorrow {
+            return "Tomorrow"
+        } else {
+            return date.formatted(date: .numeric, time: .omitted)
+        }
+    }
+    
     var body: some View {
         HStack(alignment: .top) {
             Image(systemName: reminder.isCompleted ? "circle.inset.filled": "circle")
@@ -30,9 +40,17 @@ struct ReminderCellView: View {
                 }
             VStack(alignment: .leading) {
                 Text(reminder.title)
-                Text(reminder.notes ?? "")
-                    .font(.subheadline)
-                    .foregroundStyle(.gray)
+                
+                if let notes = reminder.notes {
+                    Text(notes)
+                        .font(.subheadline)
+                        .foregroundStyle(.gray)
+                }
+                   
+                if let reminderDate = reminder.reminderDate {
+                    Text(formatReminderDate(reminderDate))
+                        .font(.caption)
+                }
             }
             Spacer()
             Image(systemName: "info.circle.fill")

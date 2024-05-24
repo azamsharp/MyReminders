@@ -29,6 +29,7 @@ struct ReminderEditScreen: View {
         reminder.title = title
         reminder.notes = notes
         reminder.reminderDate = showCalender ? reminderDate: nil
+        print(reminder.reminderDate) 
         reminder.reminderTime = showTime ? reminderTime: nil
     }
     
@@ -74,8 +75,11 @@ struct ReminderEditScreen: View {
         }.onAppear(perform: {
             title = reminder.title
             notes = reminder.notes ?? ""
+            print(reminder.reminderDate)
             reminderDate = reminder.reminderDate ?? Date()
             reminderTime = reminder.reminderTime ?? Date()
+            showCalender = reminder.reminderDate != nil
+            showTime = reminder.reminderTime != nil
         })
         .navigationTitle("Detail")
         .navigationBarTitleDisplayMode(.inline)

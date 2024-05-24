@@ -21,6 +21,7 @@
 		8D6ACB4F2BD5F0580037D4D9 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ACB4E2BD5F0580037D4D9 /* String+Extensions.swift */; };
 		8D6ACB512BD5F4920037D4D9 /* ReminderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ACB502BD5F4920037D4D9 /* ReminderCellView.swift */; };
 		8DC032552BD5DB7900C9D230 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC032542BD5DB7900C9D230 /* Reminder.swift */; };
+		8DDA23702C01454000B7A701 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDA236F2C01454000B7A701 /* Date+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		8D6ACB4E2BD5F0580037D4D9 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		8D6ACB502BD5F4920037D4D9 /* ReminderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderCellView.swift; sourceTree = "<group>"; };
 		8DC032542BD5DB7900C9D230 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
+		8DDA236F2C01454000B7A701 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 			children = (
 				8D51DF392BD4902F00FAC8BD /* Color+Extensions.swift */,
 				8D6ACB4E2BD5F0580037D4D9 /* String+Extensions.swift */,
+				8DDA236F2C01454000B7A701 /* Date+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 				8D6ACB4F2BD5F0580037D4D9 /* String+Extensions.swift in Sources */,
 				8D6ACB4D2BD4D10F0037D4D9 /* MyListDetailScreen.swift in Sources */,
 				8D51DF2D2BD48A3600FAC8BD /* MyListsScreen.swift in Sources */,
+				8DDA23702C01454000B7A701 /* Date+Extensions.swift in Sources */,
 				8D3634F82BF167760037BA09 /* ReminderEditScreen.swift in Sources */,
 				8D51DF1E2BD4884100FAC8BD /* RemindersCloneApp.swift in Sources */,
 				8D51DF3A2BD4902F00FAC8BD /* Color+Extensions.swift in Sources */,

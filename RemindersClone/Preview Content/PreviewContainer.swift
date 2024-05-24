@@ -30,6 +30,6 @@ struct SampleData {
     }
     
     static var Reminders: [Reminder] {
-        return [Reminder(title: "Reminder 1"), Reminder(title: "Reminder 2", notes: "This is a reminder 2 note")]
+        return [Reminder(title: "Reminder 1", reminderDate: Date()), Reminder(title: "Reminder 2", notes: "This is a reminder 2 note", reminderDate: Calendar.current.date(byAdding: .day, value: 1, to: Date()), reminderTime: Date())]
     }
 }
