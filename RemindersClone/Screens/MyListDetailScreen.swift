@@ -18,6 +18,8 @@ struct MyListDetailScreen: View {
     @State private var selectedReminder: Reminder?
     @State private var showReminderEditScreen: Bool = false
     
+    @State private var isReminderStatusChanged: Bool = false
+    
     init(myList: MyList) {
         
         self.myList = myList
@@ -26,7 +28,8 @@ struct MyListDetailScreen: View {
 
         // only show the reminders that are not completed
         let predicate = #Predicate<Reminder> { reminder in
-            reminder.list?.persistentModelID == listId && reminder.isCompleted == false
+            reminder.list?.persistentModelID == listId
+            && !reminder.isCompleted
         }
         
         _reminders = Query(filter: predicate)
@@ -45,20 +48,23 @@ struct MyListDetailScreen: View {
         reminder.persistentModelID == selectedReminder?.persistentModelID
     }
     
+    private func toggleReminderCompletedState(_ reminder: Reminder) {
+        reminder.isCompleted.toggle()
+    }
+    
     var body: some View {
         VStack {
             List(reminders) { reminder in
                 ReminderCellView(reminder: reminder, isSelected: isReminderSelected(reminder)) { event in
                     switch event {
-                        case .onChecked(let reminder):
-                            reminder.isCompleted.toggle()
+                    case .onChecked(let reminder, let checked):
+                        reminder.isCompleted = checked
                         case .onSelect(let reminder):
                             selectedReminder = reminder
                         case .onInfoSelected(let reminder):
                             showReminderEditScreen = true
                             selectedReminder = reminder
                     }
-                    
                 }
             }
             Spacer()
@@ -72,7 +78,14 @@ struct MyListDetailScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             })
-        }.navigationTitle(myList.name)
+        }
+        .task(id: isReminderStatusChanged) {
+            // sleep for 2 seconds
+            try? await Task.sleep(nanoseconds: 2 * 1_000_000_000)
+            selectedReminder?.isCompleted.toggle()
+        }
+        
+        .navigationTitle(myList.name)
             .alert("New Reminder", isPresented: $isOpenAddReminderPresented) {
                 TextField("", text: $title)
                 Button("Cancel", role: .cancel) { }
