@@ -27,9 +27,8 @@ struct ReminderEditScreen: View {
     
     private func updateReminder() {
         reminder.title = title
-        reminder.notes = notes
+        reminder.notes = notes.isEmpty ? nil: notes 
         reminder.reminderDate = showCalender ? reminderDate: nil
-        print(reminder.reminderDate) 
         reminder.reminderTime = showTime ? reminderTime: nil
     }
     
@@ -75,7 +74,6 @@ struct ReminderEditScreen: View {
         }.onAppear(perform: {
             title = reminder.title
             notes = reminder.notes ?? ""
-            print(reminder.reminderDate)
             reminderDate = reminder.reminderDate ?? Date()
             reminderTime = reminder.reminderTime ?? Date()
             showCalender = reminder.reminderDate != nil

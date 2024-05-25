@@ -47,10 +47,21 @@ struct ReminderCellView: View {
                         .foregroundStyle(.gray)
                 }
                    
-                if let reminderDate = reminder.reminderDate {
-                    Text(formatReminderDate(reminderDate))
-                        .font(.caption)
-                }
+                HStack {
+                    
+                    if let reminderDate = reminder.reminderDate {
+                        Text(formatReminderDate(reminderDate))
+                           
+                    }
+                    
+                    if let reminderTime = reminder.reminderTime {
+                        Text(reminderTime.formatted())
+                    }
+                    
+                }.font(.caption)
+                .foregroundStyle(.gray)
+            
+            
             }
             Spacer()
             Image(systemName: "info.circle.fill")
