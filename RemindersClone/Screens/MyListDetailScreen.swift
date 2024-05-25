@@ -24,8 +24,9 @@ struct MyListDetailScreen: View {
         
         let listId = myList.persistentModelID
 
+        // only show the reminders that are not completed
         let predicate = #Predicate<Reminder> { reminder in
-            reminder.list?.persistentModelID == listId
+            reminder.list?.persistentModelID == listId && reminder.isCompleted == false
         }
         
         _reminders = Query(filter: predicate)

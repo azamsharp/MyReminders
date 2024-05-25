@@ -35,23 +35,26 @@ struct ReminderCellView: View {
         HStack(alignment: .top) {
             Image(systemName: reminder.isCompleted ? "circle.inset.filled": "circle")
                 .font(.title2)
+                .padding([.trailing], 5)
                 .onTapGesture {
                     onEvent(.onChecked(reminder))
                 }
-            VStack(alignment: .leading) {
-                Text(reminder.title)
+            VStack {
                 
+                Text(reminder.title)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                   
                 if let notes = reminder.notes {
                     Text(notes)
                         .font(.subheadline)
                         .foregroundStyle(.gray)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                    
                 HStack {
                     
                     if let reminderDate = reminder.reminderDate {
                         Text(formatReminderDate(reminderDate))
-                           
                     }
                     
                     if let reminderTime = reminder.reminderTime {
@@ -60,6 +63,7 @@ struct ReminderCellView: View {
                     
                 }.font(.caption)
                 .foregroundStyle(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             
             }
@@ -80,7 +84,7 @@ struct ReminderCellView: View {
 struct ReminderCellViewContainer: View {
     
     @Query private var reminders: [Reminder]
-    
+     
     var body: some View {
         ReminderCellView(reminder: reminders[0], isSelected: false, onEvent: { _ in })
     }
