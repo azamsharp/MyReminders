@@ -38,6 +38,7 @@ struct ReminderCellView: View {
                 .font(.title2)
                 .padding([.trailing], 5)
                 .onTapGesture {
+                    print("image tapped")
                     checked.toggle()
                     // cancel the old task
                     delay.cancel()

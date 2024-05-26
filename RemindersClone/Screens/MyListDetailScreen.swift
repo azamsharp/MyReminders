@@ -18,8 +18,6 @@ struct MyListDetailScreen: View {
     @State private var selectedReminder: Reminder?
     @State private var showReminderEditScreen: Bool = false
     
-    @State private var isReminderStatusChanged: Bool = false
-    
     init(myList: MyList) {
         
         self.myList = myList
@@ -48,10 +46,6 @@ struct MyListDetailScreen: View {
         reminder.persistentModelID == selectedReminder?.persistentModelID
     }
     
-    private func toggleReminderCompletedState(_ reminder: Reminder) {
-        reminder.isCompleted.toggle()
-    }
-    
     var body: some View {
         VStack {
             List(reminders) { reminder in
@@ -78,11 +72,6 @@ struct MyListDetailScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             })
-        }
-        .task(id: isReminderStatusChanged) {
-            // sleep for 2 seconds
-            try? await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-            selectedReminder?.isCompleted.toggle()
         }
         
         .navigationTitle(myList.name)

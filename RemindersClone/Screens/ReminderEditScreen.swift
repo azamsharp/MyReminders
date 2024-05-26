@@ -27,7 +27,7 @@ struct ReminderEditScreen: View {
     
     private func updateReminder() {
         reminder.title = title
-        reminder.notes = notes.isEmpty ? nil: notes 
+        reminder.notes = notes.isEmpty ? nil: notes
         reminder.reminderDate = showCalender ? reminderDate: nil
         reminder.reminderTime = showTime ? reminderTime: nil
     }
@@ -62,6 +62,10 @@ struct ReminderEditScreen: View {
                     Toggle(isOn: $showTime) {
                         EmptyView()
                     }
+                }.onChange(of: showTime) {
+                    if showTime {
+                        showCalender = true
+                    } 
                 }
                 
                 if showTime {
