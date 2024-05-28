@@ -46,21 +46,29 @@ struct MyListDetailScreen: View {
         reminder.persistentModelID == selectedReminder?.persistentModelID
     }
     
+    private func deleteReminder(_ indexSet: IndexSet) {
+        
+    }
+    
     var body: some View {
         VStack {
-            List(reminders) { reminder in
-                ReminderCellView(reminder: reminder, isSelected: isReminderSelected(reminder)) { event in
-                    switch event {
-                    case .onChecked(let reminder, let checked):
-                        reminder.isCompleted = checked
+            List {
+                ForEach(reminders) { reminder in
+                    ReminderCellView(reminder: reminder, isSelected: isReminderSelected(reminder)) { event in
+                        switch event {
+                        case .onChecked(let reminder, let checked):
+                            reminder.isCompleted = checked
                         case .onSelect(let reminder):
                             selectedReminder = reminder
                         case .onInfoSelected(let reminder):
                             showReminderEditScreen = true
                             selectedReminder = reminder
+                        }
                     }
-                }
+                }.onDelete(perform: deleteReminder)
             }
+            
+            
             Spacer()
             Button(action: {
                 isOpenAddReminderPresented = true

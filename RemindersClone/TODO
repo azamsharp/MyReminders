@@ -6,4 +6,4 @@ TODO
 - Delete an individual item
 - Notifications
 - CloudKit Sync
-- When only time is set then make sure date is enabled 
+- When only time is set then make sure date is enabled (DONE)
