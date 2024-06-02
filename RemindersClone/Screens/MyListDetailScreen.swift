@@ -18,6 +18,8 @@ struct MyListDetailScreen: View {
     @State private var selectedReminder: Reminder?
     @State private var showReminderEditScreen: Bool = false
     
+    private let delay = Delay()
+    
     init(myList: MyList) {
         
         self.myList = myList
@@ -57,7 +59,12 @@ struct MyListDetailScreen: View {
                     ReminderCellView(reminder: reminder, isSelected: isReminderSelected(reminder)) { event in
                         switch event {
                         case .onChecked(let reminder, let checked):
-                            reminder.isCompleted = checked
+                            // cancel pending tasks
+                            delay.cancel()
+                            delay.performWork {
+                                reminder.isCompleted = checked
+                            }
+                            //reminder.isCompleted = checked
                         case .onSelect(let reminder):
                             selectedReminder = reminder
                         case .onInfoSelected(let reminder):

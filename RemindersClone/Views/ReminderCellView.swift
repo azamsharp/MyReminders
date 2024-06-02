@@ -20,7 +20,6 @@ struct ReminderCellView: View {
     @State private var checked: Bool = false
     let isSelected: Bool
     let onEvent: (ReminderCellEvents) -> Void
-    let delay = Delay()
    
     private func formatReminderDate(_ date: Date) -> String {
         if date.isToday {
@@ -38,14 +37,8 @@ struct ReminderCellView: View {
                 .font(.title2)
                 .padding([.trailing], 5)
                 .onTapGesture {
-                    print("image tapped")
                     checked.toggle()
-                    // cancel the old task
-                    delay.cancel()
-                    // call onCheckedChange inside the delay
-                    delay.performWork {
-                        onEvent(.onChecked(reminder, checked))
-                    }
+                    onEvent(.onChecked(reminder, checked))
                 }
             VStack {
                 
