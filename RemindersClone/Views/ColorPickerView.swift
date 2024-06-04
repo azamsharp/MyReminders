@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+/*
+ FF3B30
+ 34C759
+ 007AFF
+ FFCC00
+ FF9500
+ AF52DE
+ */
+
 struct ColorPickerView: View {
     
     @Binding var selectedColor: Color
@@ -16,17 +25,18 @@ struct ColorPickerView: View {
     var body: some View {
         HStack {
             ForEach(colors, id: \.self) { color in
+                            
                 ZStack{
                     Circle().fill()
                         .foregroundColor(color)
                         .padding(2)
                     Circle()
-                        .strokeBorder(selectedColor == color ? .gray: .clear, lineWidth: 4)
+                        .strokeBorder(selectedColor.toHex() == color.toHex() ? .gray: .clear, lineWidth: 4)
                         .scaleEffect(CGSize(width: 1.2, height: 1.2))
                 }.onTapGesture {
-                    selectedColor = color
+                   selectedColor = color
                 }
-                        
+                          
             }
         }.padding()
         .frame(maxWidth: .infinity, maxHeight: 100)
