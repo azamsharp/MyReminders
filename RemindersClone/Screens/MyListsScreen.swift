@@ -13,27 +13,34 @@ struct MyListsScreen: View {
     @Query private var myLists: [MyList]
     @State private var isPresented: Bool = false
     
+    @Environment(\.modelContext) private var context
+    
+    @State private var selectedMyList: MyList?
+    
+    private func deleteMyList(_ indexSet: IndexSet) {
+        guard let index = indexSet.last else { return }
+        let myList = myLists[index]
+        context.delete(myList)
+    }
+    
     var body: some View {
         List {
-            /*
-            Text("My Lists")
-                .font(.largeTitle)
-                .bold()
-             */
             
             ForEach(myLists) { myList in
-                NavigationLink {
-                   MyListDetailScreen(myList: myList)
                 
-                } label: {
-                    HStack {
-                        Image(systemName: "line.3.horizontal.circle.fill")
-                            .font(.system(size: 32))
-                            .foregroundStyle(Color(hex: myList.colorCode))
-                        Text(myList.name)
-                    }
+                NavigationLink(value: myList) {
+                    MyListCellView(myList: myList)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedMyList = myList
+                        }
+                        .onLongPressGesture(minimumDuration: 0.5) {
+                            print("LongPress Gesture")
+                        }
+                        
                 }
-            }
+                
+            }.onDelete(perform: deleteMyList)
             
             Button(action: {
                 isPresented = true
@@ -44,6 +51,9 @@ struct MyListsScreen: View {
             }).listRowSeparator(.hidden)
             
         }
+        .navigationDestination(item: $selectedMyList, destination: { myList in
+            MyListDetailScreen(myList: myList)
+        })
         .navigationTitle("My Lists")
         .listStyle(.plain)
             .sheet(isPresented: $isPresented, content: {
@@ -64,3 +74,5 @@ struct MyListsScreen: View {
         MyListsScreen()
     }.modelContainer(previewContainer)
 }
+
+

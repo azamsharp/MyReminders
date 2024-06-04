@@ -18,6 +18,8 @@ struct MyListDetailScreen: View {
     @State private var selectedReminder: Reminder?
     @State private var showReminderEditScreen: Bool = false
     
+    @Environment(\.modelContext) private var context
+    
     private let delay = Delay()
     
     init(myList: MyList) {
@@ -46,10 +48,12 @@ struct MyListDetailScreen: View {
     
     private func isReminderSelected(_ reminder: Reminder) -> Bool {
         reminder.persistentModelID == selectedReminder?.persistentModelID
-    }
+    }  
     
     private func deleteReminder(_ indexSet: IndexSet) {
-        
+        guard let index = indexSet.last else { return }
+        let reminder = reminders[index]
+        context.delete(reminder)
     }
     
     var body: some View {
@@ -64,7 +68,6 @@ struct MyListDetailScreen: View {
                             delay.performWork {
                                 reminder.isCompleted = checked
                             }
-                            //reminder.isCompleted = checked
                         case .onSelect(let reminder):
                             selectedReminder = reminder
                         case .onInfoSelected(let reminder):

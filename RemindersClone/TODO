@@ -2,9 +2,10 @@
 TODO
 
 - Add delay when checking an todo item for completion (DONE)
-- Delete a list
-- Delete an individual item
+- Delete a list (DONE)
+- Delete an individual item (DONE)
 - Notifications
 - CloudKit Sync
 - When only time is set then make sure date is enabled (DONE)
-- Add the delay on the calling site 
+- Add the delay on the calling site (DONE)
+- Updating List (Long Press)

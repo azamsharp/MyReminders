@@ -84,7 +84,6 @@ struct ReminderCellView: View {
             .onTapGesture {
                 onEvent(.onSelect(reminder))
             }
-            
     }
 }
 
