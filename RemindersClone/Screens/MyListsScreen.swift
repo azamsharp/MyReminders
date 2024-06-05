@@ -8,8 +8,6 @@
 import SwiftUI
 import SwiftData
 
-
-
 struct MyListsScreen: View {
     
     @Query private var myLists: [MyList]
@@ -41,6 +39,42 @@ struct MyListsScreen: View {
     
     var body: some View {
         List {
+            
+            VStack {
+                HStack {
+                    GroupBox {
+                        HStack {
+                            VStack(spacing: 10) {
+                                Image(systemName: "heart")
+                                Text("Today")
+                            }
+                            
+                            Text("0")
+                                .font(.largeTitle)
+                        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                    GroupBox {
+                        HStack {
+                            VStack(spacing: 10) {
+                                Image(systemName: "heart")
+                                Text("Today")
+                            }
+                            
+                            Text("0")
+                                .font(.largeTitle)
+                        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+                
+                HStack {
+                    GroupBox {
+                        Text("Foo")
+                    }
+                    GroupBox {
+                        Text("Foo")
+                    }
+                }
+            }
             
             ForEach(myLists) { myList in
                 
