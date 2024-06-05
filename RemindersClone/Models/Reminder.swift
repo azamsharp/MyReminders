@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+
 @Model
 class Reminder {
     
@@ -26,4 +27,6 @@ class Reminder {
         self.reminderDate = reminderDate
         self.reminderTime = reminderTime
     }
+    
+    
 }

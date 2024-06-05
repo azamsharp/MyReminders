@@ -8,27 +8,48 @@
 import SwiftUI
 import SwiftData
 
-struct MyListsScreen: View {
+enum ReminderFilter {
     
-    @Query private var myLists: [MyList]
+    case today
+    case scheduled
     
-    @Environment(\.modelContext) private var context
-    @State private var selectedMyList: MyList?
-    
-    enum MyListScreenSheets: Identifiable {
-        case newList
-        case editList(MyList)
+    static func remindersBy(_ filter: ReminderFilter, _ reminders: [Reminder]) -> [Reminder] {
         
-        var id: Int {
-            switch self {
-                case .newList:
-                    return 1
-                case .editList(_):
-                    return 2
+        switch filter {
+        case .today:
+            return reminders.filter {
+                guard let reminderDate = $0.reminderDate else { return false }
+                return reminderDate.isToday
+            }
+        case .scheduled:
+            return reminders.filter {
+                $0.reminderDate != nil
             }
         }
     }
+}
+
+enum MyListScreenSheets: Identifiable {
+    case newList
+    case editList(MyList)
     
+    var id: Int {
+        switch self {
+        case .newList:
+            return 1
+        case .editList(_):
+            return 2
+        }
+    }
+}
+
+struct MyListsScreen: View {
+    
+    @Query private var myLists: [MyList]
+    @Query private var reminders: [Reminder]
+    
+    @Environment(\.modelContext) private var context
+    @State private var selectedMyList: MyList?
     @State private var actionSheet: MyListScreenSheets?
     
     private func deleteMyList(_ indexSet: IndexSet) {
@@ -37,7 +58,19 @@ struct MyListsScreen: View {
         context.delete(myList)
     }
     
+    private var reminderCounts: (Int, Int, Int, Int) {
+        return (
+            ReminderFilter.remindersBy(.today, reminders).count
+            , ReminderFilter.remindersBy(.scheduled, reminders).count
+            , 4
+            , 5
+        )
+    }
+    
     var body: some View {
+        
+        let (todaysCount, scheduledCount, c, d) = reminderCounts
+        
         List {
             
             VStack {
@@ -48,8 +81,8 @@ struct MyListsScreen: View {
                                 Image(systemName: "heart")
                                 Text("Today")
                             }
-                            
-                            Text("0")
+                            Spacer()
+                            Text("\(todaysCount)")
                                 .font(.largeTitle)
                         }.frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
@@ -57,10 +90,10 @@ struct MyListsScreen: View {
                         HStack {
                             VStack(spacing: 10) {
                                 Image(systemName: "heart")
-                                Text("Today")
+                                Text("Scheduled")
                             }
                             
-                            Text("0")
+                            Text("\(scheduledCount)")
                                 .font(.largeTitle)
                         }.frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
@@ -87,7 +120,6 @@ struct MyListsScreen: View {
                         .onLongPressGesture(minimumDuration: 0.5) {
                             actionSheet = .editList(myList)
                         }
-                        
                 }
                 
             }.onDelete(perform: deleteMyList)
@@ -108,14 +140,14 @@ struct MyListsScreen: View {
         .listStyle(.plain)
         .sheet(item: $actionSheet, content: { actionSheet in
             switch actionSheet {
-                case .newList:
-                    NavigationStack {
-                        AddMyListScreen()
-                    }
-                case .editList(let myList):
-                    NavigationStack {
-                        AddMyListScreen(myList: myList)
-                    }
+            case .newList:
+                NavigationStack {
+                    AddMyListScreen()
+                }
+            case .editList(let myList):
+                NavigationStack {
+                    AddMyListScreen(myList: myList)
+                }
             }
         })
         .overlay {
