@@ -8,8 +8,6 @@
 import SwiftUI
 import SwiftData
 
-
-
 struct MyListsScreen: View {
     
     @Query private var myLists: [MyList]
