@@ -8,6 +8,13 @@
 import SwiftUI
 import SwiftData
 
+// Helper to chunk an array into smaller arrays
+extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
+    }
+}
+
 enum ReminderStatsType: Int, Identifiable {
     
     case today
@@ -64,19 +71,23 @@ struct MyListsScreen: View {
         context.delete(myList)
     }
     
+    private var inCompleteReminders: [Reminder] {
+        reminders.filter { !$0.isCompleted }
+    }
+    
     private var todaysReminders: [Reminder] {
         reminders.filter {
             guard let reminderDate = $0.reminderDate else {
                 return false
             }
             
-            return reminderDate.isToday
+            return reminderDate.isToday && !$0.isCompleted
         }
     }
     
     private var scheduledReminders: [Reminder] {
         reminders.filter {
-            $0.reminderDate != nil
+            $0.reminderDate != nil && !$0.isCompleted
         }
     }
     
@@ -89,31 +100,7 @@ struct MyListsScreen: View {
         List {
             
             VStack {
-                HStack {
-                    
-                    ReminderStatsView(icon: "calendar", title: "Today", count: todaysReminders.count)
-                        .onTapGesture {
-                            reminderStatsType = .today
-                        }
-                    
-                    ReminderStatsView(icon: "calendar.circle.fill", title: "Scheduled", count: scheduledReminders.count)
-                        .onTapGesture {
-                            reminderStatsType = .scheduled
-                        }
-                }
                 
-                HStack {
-                    
-                    ReminderStatsView(icon: "tray.circle.fill", title: "All", count: reminders.count)
-                        .onTapGesture {
-                            reminderStatsType = .all
-                        }
-                    
-                    ReminderStatsView(icon: "checkmark.circle.fill", title: "Completed", count: completedReminders.count)
-                        .onTapGesture {
-                            reminderStatsType = .completed
-                        }
-                }
             }
             
             ForEach(myLists) { myList in
@@ -148,7 +135,7 @@ struct MyListsScreen: View {
             NavigationStack {
                 switch reminderStatsType {
                     case .all:
-                        ReminderListView(reminders: reminders)
+                        ReminderListView(reminders: inCompleteReminders)
                     case .scheduled:
                         ReminderListView(reminders: scheduledReminders)
                     case .today:

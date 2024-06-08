@@ -13,7 +13,7 @@ struct ReminderListView: View {
     let reminders: [Reminder]
     @Environment(\.modelContext) private var context
     
-    @State private var selectedReminder: Reminder?
+    @State private var selectedReminder: Reminder? = nil 
     @State private var showReminderEditScreen: Bool = false
     
     private let delay = Delay()
