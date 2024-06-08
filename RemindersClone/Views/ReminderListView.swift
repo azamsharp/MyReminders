@@ -13,14 +13,10 @@ struct ReminderListView: View {
     let reminders: [Reminder]
     @Environment(\.modelContext) private var context
     
-    @Binding var selectedReminder: Reminder?
-    @Binding var showReminderEditScreen: Bool
+    @State private var selectedReminder: Reminder? = nil 
+    @State private var showReminderEditScreen: Bool = false
     
     private let delay = Delay()
-    
-    private func isReminderSelected(_ reminder: Reminder) -> Bool {
-        reminder.persistentModelID == selectedReminder?.persistentModelID
-    }
     
     private func deleteReminder(_ indexSet: IndexSet) {
         guard let index = indexSet.last else { return }
@@ -31,24 +27,22 @@ struct ReminderListView: View {
     var body: some View {
         List {
             ForEach(reminders) { reminder in
-                ReminderCellView(reminder: reminder, isSelected: isReminderSelected(reminder)) { event in
+                ReminderCellView(reminder: reminder) { event in
                     switch event {
                     case .onChecked(let reminder, let checked):
-                        // cancel pending tasks
                         delay.cancel()
                         delay.performWork {
                             reminder.isCompleted = checked
                         }
-                    case .onSelect(let reminder):
+                    case .onSelect(let reminder): // for editing 
                         selectedReminder = reminder
-                    case .onInfoSelected(let reminder):
-                        print(reminder.title)
-                        selectedReminder = reminder
-                        showReminderEditScreen = true
-                       
                     }
                 }
             }.onDelete(perform: deleteReminder)
-        }
+        }.sheet(item: $selectedReminder, content: { selectedReminder in
+            NavigationStack {
+                ReminderEditScreen(reminder: selectedReminder)
+            }
+        })
     }
 }

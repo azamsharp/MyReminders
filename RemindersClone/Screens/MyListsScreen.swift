@@ -18,6 +18,19 @@ enum ReminderStatsType: Int, Identifiable {
     var id: Int {
         self.rawValue
     }
+    
+    var title: String {
+        switch self {
+            case .today:
+                return "Today"
+            case .scheduled:
+                return "Scheduled"
+            case .all:
+                return "All"
+            case .completed:
+                return "Completed"
+        }
+    }
 }
 
 enum MyListScreenSheets: Identifiable {
@@ -51,19 +64,23 @@ struct MyListsScreen: View {
         context.delete(myList)
     }
     
+    private var inCompleteReminders: [Reminder] {
+        reminders.filter { !$0.isCompleted }
+    }
+    
     private var todaysReminders: [Reminder] {
         reminders.filter {
             guard let reminderDate = $0.reminderDate else {
                 return false
             }
             
-            return reminderDate.isToday
+            return reminderDate.isToday && !$0.isCompleted
         }
     }
     
     private var scheduledReminders: [Reminder] {
         reminders.filter {
-            $0.reminderDate != nil
+            $0.reminderDate != nil && !$0.isCompleted
         }
     }
     
@@ -91,7 +108,7 @@ struct MyListsScreen: View {
                 
                 HStack {
                     
-                    ReminderStatsView(icon: "tray.circle.fill", title: "All", count: reminders.count)
+                    ReminderStatsView(icon: "tray.circle.fill", title: "All", count: inCompleteReminders.count)
                         .onTapGesture {
                             reminderStatsType = .all
                         }
@@ -130,16 +147,21 @@ struct MyListsScreen: View {
         .navigationDestination(item: $selectedMyList, destination: { myList in
             MyListDetailScreen(myList: myList)
         })
-        /*
+        
         .navigationDestination(item: $reminderStatsType, destination: { reminderStatsType in
-            
-            switch reminderStatsType {
-                case .all, .scheduled, .today, .completed:
-                    //ReminderListView(reminders: reminders)
-                    Text("ss")
-            }
-            
-        }) */
+            NavigationStack {
+                switch reminderStatsType {
+                    case .all:
+                        ReminderListView(reminders: inCompleteReminders)
+                    case .scheduled:
+                        ReminderListView(reminders: scheduledReminders)
+                    case .today:
+                        ReminderListView(reminders: todaysReminders)
+                    case .completed:
+                        ReminderListView(reminders: completedReminders)
+                }
+            }.navigationTitle(reminderStatsType.title)
+        })
         
        
         .navigationTitle("My Lists")
