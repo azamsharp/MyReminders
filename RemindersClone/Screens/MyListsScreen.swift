@@ -8,36 +8,11 @@
 import SwiftUI
 import SwiftData
 
-// Helper to chunk an array into smaller arrays
-extension Array {
-    func chunked(into size: Int) -> [[Element]] {
-        stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
-    }
-}
-
-enum ReminderStatsType: Int, Identifiable {
-    
-    case today
-    case scheduled
-    case all
-    case completed
-    
-    var id: Int {
-        self.rawValue
-    }
-    
-    var title: String {
-        switch self {
-            case .today:
-                return "Today"
-            case .scheduled:
-                return "Scheduled"
-            case .all:
-                return "All"
-            case .completed:
-                return "Completed"
-        }
-    }
+struct ReminderStatsData {
+    let icon: String
+    let title: String
+    let count: Int
+    let type: ReminderStatsType
 }
 
 enum MyListScreenSheets: Identifiable {
@@ -95,16 +70,46 @@ struct MyListsScreen: View {
         reminders.filter { $0.isCompleted }
     }
     
+    private var reminderStatsData: [ReminderStatsData] {
+        [
+            ReminderStatsData(icon: ReminderStatsType.today.icon, title: ReminderStatsType.today.title, count: todaysReminders.count, type: .today),
+            ReminderStatsData(icon: ReminderStatsType.scheduled.icon, title: ReminderStatsType.scheduled.title, count: scheduledReminders.count, type: .scheduled),
+            ReminderStatsData(icon: ReminderStatsType.all.icon, title: ReminderStatsType.all.title, count: inCompleteReminders.count, type: .all),
+            ReminderStatsData(icon: ReminderStatsType.completed.icon, title: ReminderStatsType.completed.title, count: completedReminders.count, type: .completed)
+        ]
+    }
+    
+    private func reminders(for type: ReminderStatsType) -> [Reminder] {
+        switch type {
+            case .all:
+                return inCompleteReminders
+            case .scheduled:
+                return scheduledReminders
+            case .today:
+                return todaysReminders
+            case .completed:
+                return completedReminders
+        }
+    }
+ 
     var body: some View {
         
         List {
             
             VStack {
-                
+                ForEach(Array(reminderStatsData.chunked(into: 2).enumerated()), id: \.offset) { _, chunk in
+                    HStack {
+                        ForEach(chunk, id: \.title) { data in
+                            ReminderStatsView(icon: data.icon, title: data.title, count: data.count)
+                                .onTapGesture {
+                                    reminderStatsType = data.type
+                                }
+                        }
+                    }
+                }
             }
             
             ForEach(myLists) { myList in
-                
                 NavigationLink(value: myList) {
                     MyListCellView(myList: myList)
                         .contentShape(Rectangle())
@@ -133,17 +138,9 @@ struct MyListsScreen: View {
         
         .navigationDestination(item: $reminderStatsType, destination: { reminderStatsType in
             NavigationStack {
-                switch reminderStatsType {
-                    case .all:
-                        ReminderListView(reminders: inCompleteReminders)
-                    case .scheduled:
-                        ReminderListView(reminders: scheduledReminders)
-                    case .today:
-                        ReminderListView(reminders: todaysReminders)
-                    case .completed:
-                        ReminderListView(reminders: completedReminders)
-                }
-            }.navigationTitle(reminderStatsType.title)
+                ReminderListView(reminders: reminders(for: reminderStatsType))
+                            .navigationTitle(reminderStatsType.title)
+            }
         })
         
        

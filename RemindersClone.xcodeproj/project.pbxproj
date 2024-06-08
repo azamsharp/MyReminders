@@ -28,6 +28,8 @@
 		8DDA23722C0283DF00B7A701 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 8DDA23712C0283DF00B7A701 /* TODO */; };
 		8DDA23752C028FF900B7A701 /* Delay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDA23742C028FF900B7A701 /* Delay.swift */; };
 		8DE736192C13EB5800EC27BB /* FooView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE736182C13EB5800EC27BB /* FooView.swift */; };
+		8DE7361B2C14A81500EC27BB /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE7361A2C14A81500EC27BB /* Array+Extensions.swift */; };
+		8DE7361D2C14A92E00EC27BB /* ReminderStatsType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE7361C2C14A92E00EC27BB /* ReminderStatsType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,8 @@
 		8DDA23712C0283DF00B7A701 /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		8DDA23742C028FF900B7A701 /* Delay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delay.swift; sourceTree = "<group>"; };
 		8DE736182C13EB5800EC27BB /* FooView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooView.swift; sourceTree = "<group>"; };
+		8DE7361A2C14A81500EC27BB /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
+		8DE7361C2C14A92E00EC27BB /* ReminderStatsType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderStatsType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,7 @@
 			children = (
 				8D51DF342BD48E4800FAC8BD /* MyList.swift */,
 				8DC032542BD5DB7900C9D230 /* Reminder.swift */,
+				8DE7361C2C14A92E00EC27BB /* ReminderStatsType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -146,6 +151,7 @@
 				8D51DF392BD4902F00FAC8BD /* Color+Extensions.swift */,
 				8D6ACB4E2BD5F0580037D4D9 /* String+Extensions.swift */,
 				8DDA236F2C01454000B7A701 /* Date+Extensions.swift */,
+				8DE7361A2C14A81500EC27BB /* Array+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -230,6 +236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D6ACB4F2BD5F0580037D4D9 /* String+Extensions.swift in Sources */,
+				8DE7361D2C14A92E00EC27BB /* ReminderStatsType.swift in Sources */,
 				8DE736192C13EB5800EC27BB /* FooView.swift in Sources */,
 				8D6ACB4D2BD4D10F0037D4D9 /* MyListDetailScreen.swift in Sources */,
 				8D5571962C13C01400A2A3E2 /* ReminderStatsView.swift in Sources */,
@@ -246,6 +253,7 @@
 				8DC032552BD5DB7900C9D230 /* Reminder.swift in Sources */,
 				8DDA23752C028FF900B7A701 /* Delay.swift in Sources */,
 				8D51DF372BD48ECF00FAC8BD /* PreviewContainer.swift in Sources */,
+				8DE7361B2C14A81500EC27BB /* Array+Extensions.swift in Sources */,
 				8D51DF352BD48E4800FAC8BD /* MyList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
