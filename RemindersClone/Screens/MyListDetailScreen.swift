@@ -58,26 +58,8 @@ struct MyListDetailScreen: View {
     
     var body: some View {
         VStack {
-            List {
-                ForEach(reminders) { reminder in
-                    ReminderCellView(reminder: reminder, isSelected: isReminderSelected(reminder)) { event in
-                        switch event {
-                        case .onChecked(let reminder, let checked):
-                            // cancel pending tasks
-                            delay.cancel()
-                            delay.performWork {
-                                reminder.isCompleted = checked
-                            }
-                        case .onSelect(let reminder):
-                            selectedReminder = reminder
-                        case .onInfoSelected(let reminder):
-                            showReminderEditScreen = true
-                            selectedReminder = reminder
-                        }
-                    }
-                }.onDelete(perform: deleteReminder)
-            }
             
+            ReminderListView(reminders: reminders, selectedReminder: $selectedReminder, showReminderEditScreen: $showReminderEditScreen)
             
             Spacer()
             Button(action: {
@@ -103,13 +85,15 @@ struct MyListDetailScreen: View {
                 }
             }
             .sheet(isPresented: $showReminderEditScreen, content: {
-                
+                let _ = print("ReminderEditScreen")
+                // selectedReminder is always nil 
+                let _ = print(selectedReminder?.title ?? "")
                 if let selectedReminder {
                     NavigationStack {
+                        let _ = print("ReminderEditScreen")
                         ReminderEditScreen(reminder: selectedReminder)
                     }
                 }
-               
             })
     }
 }

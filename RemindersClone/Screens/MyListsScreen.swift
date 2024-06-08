@@ -8,24 +8,15 @@
 import SwiftUI
 import SwiftData
 
-enum ReminderFilter {
+enum ReminderStatsType: Int, Identifiable {
     
     case today
     case scheduled
+    case all
+    case completed
     
-    static func remindersBy(_ filter: ReminderFilter, _ reminders: [Reminder]) -> [Reminder] {
-        
-        switch filter {
-        case .today:
-            return reminders.filter {
-                guard let reminderDate = $0.reminderDate else { return false }
-                return reminderDate.isToday
-            }
-        case .scheduled:
-            return reminders.filter {
-                $0.reminderDate != nil
-            }
-        }
+    var id: Int {
+        self.rawValue
     }
 }
 
@@ -52,60 +43,63 @@ struct MyListsScreen: View {
     @State private var selectedMyList: MyList?
     @State private var actionSheet: MyListScreenSheets?
     
+    @State private var reminderStatsType: ReminderStatsType?
+    
     private func deleteMyList(_ indexSet: IndexSet) {
         guard let index = indexSet.last else { return }
         let myList = myLists[index]
         context.delete(myList)
     }
     
-    private var reminderCounts: (Int, Int, Int, Int) {
-        return (
-            ReminderFilter.remindersBy(.today, reminders).count
-            , ReminderFilter.remindersBy(.scheduled, reminders).count
-            , 4
-            , 5
-        )
+    private var todaysReminders: [Reminder] {
+        reminders.filter {
+            guard let reminderDate = $0.reminderDate else {
+                return false
+            }
+            
+            return reminderDate.isToday
+        }
+    }
+    
+    private var scheduledReminders: [Reminder] {
+        reminders.filter {
+            $0.reminderDate != nil
+        }
+    }
+    
+    private var completedReminders: [Reminder] {
+        reminders.filter { $0.isCompleted }
     }
     
     var body: some View {
-        
-        let (todaysCount, scheduledCount, c, d) = reminderCounts
         
         List {
             
             VStack {
                 HStack {
-                    GroupBox {
-                        HStack {
-                            VStack(spacing: 10) {
-                                Image(systemName: "heart")
-                                Text("Today")
-                            }
-                            Spacer()
-                            Text("\(todaysCount)")
-                                .font(.largeTitle)
-                        }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                    GroupBox {
-                        HStack {
-                            VStack(spacing: 10) {
-                                Image(systemName: "heart")
-                                Text("Scheduled")
-                            }
-                            
-                            Text("\(scheduledCount)")
-                                .font(.largeTitle)
-                        }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
+                    
+                    ReminderStatsView(icon: "calendar", title: "Today", count: todaysReminders.count)
+                        .onTapGesture {
+                            reminderStatsType = .today
+                        }
+                    
+                    ReminderStatsView(icon: "calendar.circle.fill", title: "Scheduled", count: scheduledReminders.count)
+                        .onTapGesture {
+                            reminderStatsType = .scheduled
+                        }
                 }
                 
                 HStack {
-                    GroupBox {
-                        Text("Foo")
-                    }
-                    GroupBox {
-                        Text("Foo")
-                    }
+                    
+                    ReminderStatsView(icon: "tray.circle.fill", title: "All", count: reminders.count)
+                        .onTapGesture {
+                            reminderStatsType = .all
+                        }
+                    
+                    ReminderStatsView(icon: "checkmark.circle.fill", title: "Completed", count: completedReminders.count)
+                        .onTapGesture {
+                            reminderStatsType = .completed
+                        }
                 }
             }
             
@@ -136,6 +130,18 @@ struct MyListsScreen: View {
         .navigationDestination(item: $selectedMyList, destination: { myList in
             MyListDetailScreen(myList: myList)
         })
+        /*
+        .navigationDestination(item: $reminderStatsType, destination: { reminderStatsType in
+            
+            switch reminderStatsType {
+                case .all, .scheduled, .today, .completed:
+                    //ReminderListView(reminders: reminders)
+                    Text("ss")
+            }
+            
+        }) */
+        
+       
         .navigationTitle("My Lists")
         .listStyle(.plain)
         .sheet(item: $actionSheet, content: { actionSheet in
