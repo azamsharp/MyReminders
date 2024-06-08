@@ -18,6 +18,19 @@ enum ReminderStatsType: Int, Identifiable {
     var id: Int {
         self.rawValue
     }
+    
+    var title: String {
+        switch self {
+            case .today:
+                return "Today"
+            case .scheduled:
+                return "Scheduled"
+            case .all:
+                return "All"
+            case .completed:
+                return "Completed"
+        }
+    }
 }
 
 enum MyListScreenSheets: Identifiable {
@@ -130,16 +143,21 @@ struct MyListsScreen: View {
         .navigationDestination(item: $selectedMyList, destination: { myList in
             MyListDetailScreen(myList: myList)
         })
-        /*
+        
         .navigationDestination(item: $reminderStatsType, destination: { reminderStatsType in
-            
-            switch reminderStatsType {
-                case .all, .scheduled, .today, .completed:
-                    //ReminderListView(reminders: reminders)
-                    Text("ss")
-            }
-            
-        }) */
+            NavigationStack {
+                switch reminderStatsType {
+                    case .all:
+                        ReminderListView(reminders: reminders)
+                    case .scheduled:
+                        ReminderListView(reminders: scheduledReminders)
+                    case .today:
+                        ReminderListView(reminders: todaysReminders)
+                    case .completed:
+                        ReminderListView(reminders: completedReminders)
+                }
+            }.navigationTitle(reminderStatsType.title)
+        })
         
        
         .navigationTitle("My Lists")

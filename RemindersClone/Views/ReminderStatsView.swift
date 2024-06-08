@@ -12,7 +12,6 @@ struct ReminderStatsView: View {
     let icon: String
     let title: String
     var count: Int
-    //@Binding var reminderStatsType: ReminderStatsType?
     
     var body: some View {
         GroupBox {

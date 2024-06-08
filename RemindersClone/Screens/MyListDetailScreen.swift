@@ -15,8 +15,6 @@ struct MyListDetailScreen: View {
     
     @State private var isOpenAddReminderPresented: Bool = false
     @State private var title: String = ""
-    @State private var selectedReminder: Reminder?
-    @State private var showReminderEditScreen: Bool = false
     
     @Environment(\.modelContext) private var context
     
@@ -46,20 +44,10 @@ struct MyListDetailScreen: View {
         myList.reminders.append(reminder)
     }
     
-    private func isReminderSelected(_ reminder: Reminder) -> Bool {
-        reminder.persistentModelID == selectedReminder?.persistentModelID
-    }  
-    
-    private func deleteReminder(_ indexSet: IndexSet) {
-        guard let index = indexSet.last else { return }
-        let reminder = reminders[index]
-        context.delete(reminder)
-    }
-    
     var body: some View {
         VStack {
             
-            ReminderListView(reminders: reminders, selectedReminder: $selectedReminder, showReminderEditScreen: $showReminderEditScreen)
+            ReminderListView(reminders: reminders)
             
             Spacer()
             Button(action: {
@@ -83,18 +71,7 @@ struct MyListDetailScreen: View {
                         saveReminder()
                     }
                 }
-            }
-            .sheet(isPresented: $showReminderEditScreen, content: {
-                let _ = print("ReminderEditScreen")
-                // selectedReminder is always nil 
-                let _ = print(selectedReminder?.title ?? "")
-                if let selectedReminder {
-                    NavigationStack {
-                        let _ = print("ReminderEditScreen")
-                        ReminderEditScreen(reminder: selectedReminder)
-                    }
-                }
-            })
+            }  
     }
 }
 
