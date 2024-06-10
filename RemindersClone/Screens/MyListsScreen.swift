@@ -32,13 +32,15 @@ enum MyListScreenSheets: Identifiable {
 struct MyListsScreen: View {
     
     @Query private var myLists: [MyList]
-    @Query private var reminders: [Reminder]
+    @Query(filter: #Predicate<Reminder> { !$0.isCompleted }) private var reminders: [Reminder]
     
     @Environment(\.modelContext) private var context
     @State private var selectedMyList: MyList?
     @State private var actionSheet: MyListScreenSheets?
-    
     @State private var reminderStatsType: ReminderStatsType?
+    
+    @State private var search: String = ""
+    @State private var searching: Bool = false
     
     private func deleteMyList(_ indexSet: IndexSet) {
         guard let index = indexSet.last else { return }
@@ -91,6 +93,12 @@ struct MyListsScreen: View {
                 return completedReminders
         }
     }
+    
+    private var searchResults: [Reminder] {
+        reminders.filter {
+            $0.title.lowercased().contains(search.lowercased())
+        }
+    }
  
     var body: some View {
         
@@ -113,6 +121,7 @@ struct MyListsScreen: View {
                 NavigationLink(value: myList) {
                     MyListCellView(myList: myList)
                         .contentShape(Rectangle())
+                        
                         .onTapGesture {
                             selectedMyList = myList
                         }
@@ -122,6 +131,7 @@ struct MyListsScreen: View {
                 }
                 
             }.onDelete(perform: deleteMyList)
+                .opacity(searching ? 0: 1)
             
             Button(action: {
                 actionSheet = .newList
@@ -132,18 +142,21 @@ struct MyListsScreen: View {
             }).listRowSeparator(.hidden)
             
         }
+        .overlay(alignment: .center, content: {
+            if searching {
+                ReminderListView(reminders: searchResults)
+            }
+        })
+       
         .navigationDestination(item: $selectedMyList, destination: { myList in
             MyListDetailScreen(myList: myList)
         })
-        
         .navigationDestination(item: $reminderStatsType, destination: { reminderStatsType in
             NavigationStack {
                 ReminderListView(reminders: reminders(for: reminderStatsType))
                             .navigationTitle(reminderStatsType.title)
             }
         })
-        
-       
         .navigationTitle("My Lists")
         .listStyle(.plain)
         .sheet(item: $actionSheet, content: { actionSheet in
@@ -163,13 +176,27 @@ struct MyListsScreen: View {
                 ContentUnavailableView("No lists are available!", systemImage: "list.bullet")
             }
         }
+        
+        .searchable(text: $search)
+        .onChange(of: search, {
+            searching = !search.isEmpty
+        })
+       
     }
 }
 
-#Preview { @MainActor in
+#Preview("Light Mode") { @MainActor in
     NavigationStack {
         MyListsScreen()
     }.modelContainer(previewContainer)
 }
 
+
+#Preview("Dark Mode") { @MainActor in
+    NavigationStack {
+        MyListsScreen()
+    }
+    .modelContainer(previewContainer)
+    .environment(\.colorScheme, .dark)
+}
 
